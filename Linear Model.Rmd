@@ -103,10 +103,11 @@ the correlation here is 0.63 the higher the correlation is the closer the points
   
 ```{r}
 model.2 <- lm(SIMS~GRIP,data=data)
-summary.lm(model.2)
+atst<- summary.lm(model.2)
+summary(atst)
 ```
 
-the modified R- square is 0.4053, previously the number was 0.409 small standard error makes for a successful model. this model is not as good as the model with ARM (model.1) because the standard deviation is larger. notice the difference between the multiple.   
+the modified R- square is `r round(summary(model.2)$adj.r.squared,3)`, previously the number was `r round(summary(model.1)$adj.r.squared,3)` small standard error makes for a successful model. this model is not as good as the model with ARM (model.1) because the standard deviation is larger. notice the difference between the multiple.   
 
 # now add the model fit to our plot
   
