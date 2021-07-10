@@ -1,0 +1,115 @@
+---
+title: "linear model from Web"
+author: "Michael Abdalla"
+date: "Put semester and year"
+output:
+   html_document:
+         toc: true
+         toc_depth: 5
+        
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Read about the data from the website where it is staged.  Then form three regression models; Model1 is SIMS~ARM, Model2 is SIMS~GRIP, and Model3 is SIMS~ARM+GRIP. For each model find a 95% prediction interval of SIMS given a value of 94  for GRIP and 88 for ARM. Compare Model1 with Model3 using anova. Write it up in a markdown document, push the project up to your github account and submit it back to canvas as link. 
+
+ 
+
+
+```{r include=FALSE}
+require(tidyverse)
+require(tigerstats)
+require(rgl)
+require(knitr)
+
+```
+
+```{r}
+data <- read.csv(file="https://onlinestatbook.com/case_studies_rvls/physical_strength/data.txt",sep="",header=TRUE)  
+
+```
+
+## Model 1 SIM~ARMS
+
+
+
+### scatterplot
+
+```{r}
+plot(SIMS~ARM,data=data)
+```
+
+this scatter plot shows that SIMS is correlated with ARM  where ARM increases SIMS also increases.
+
+### Numerical results
+
+```{r}
+cor(SIMS~ARM,data=data)
+```
+the number that the document shows is 0.68 which is a positive number and that indicates that the line will travel upward toward the right.
+
+### Inferential  (Build model.1)
+
+  
+```{r}
+model.1 <- lm(SIMS~ARM,data=data)
+summary.lm(model.1)
+```
+The evaluation for the line that fits this is SIMS is equal to `r round(summary(model.1)$coefficients[1],3)` +`r round(summary(model.1)$coefficients[2],3)` * ARM 
+the formula needed is y = mx + b to create the line.
+
+#### Predict at target point
+
+```{r}
+newdata = data.frame(ARM=88,GRIP=94)
+predict.lm(model.1,newdata, interval = "prediction")
+```
+the model predicted a SIMS score of .706, where the 95% confidence interval -1.726 to 3.139 
+
+#### scatterplot with model fit
+  
+
+## Model 2 SIM~GRIP
+
+
+
+### Now add in scatterplot
+
+```{r}
+plot(SIMS~GRIP,data=data)
+```
+
+ this scatter plot shows that SIMS is correlated with GRIP  where GRIP increases SIMS also increases .
+
+### Numerical results 
+
+
+### Inferential  (Build model.2)
+  
+
+#### predict model.2 at target point
+
+#### now add the model fit to our plot for model.2
+  
+
+
+## Model 3 SIM~ARM+GRIP
+
+### Numerical results (cor)
+
+`
+  
+### Inferential  (Build 2-dimentional model.3)
+
+#### predict model.3 at target point
+  
+
+## Comparing nested models ANOVA Test
+
+### Model.1 vs Model.3
+### Model.2 vs Model.3
+
+## Informally compare Model.1 with model.2
+
