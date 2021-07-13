@@ -36,19 +36,23 @@ data <- read.csv(file="https://onlinestatbook.com/case_studies_rvls/physical_str
 
 
 ### scatterplot
-
 ```{r}
-plot(SIMS~ARM,data=data)
+basicNN <- ggplot(data,aes(y=SIMS,x=ARM))
 ```
 
-this scatter plot shows that SIMS is correlated with ARM  where ARM increases SIMS also increases.
+```{r}
+basicNN + geom_point()
+```
+
+the plot shows there is a positive linear correlation as we have here the sims shown on the y-axis and arm shown on the x-axis 
+
 
 ### Numerical results
 
 ```{r}
 cor(SIMS~ARM,data=data)
 ```
-the number that the document shows is 0.68 which is a positive number and that indicates that the line will travel upward toward the right.
+the number that the is shown is 0.68 which is a positive number and that indicates that the line will travel upward toward the right.
 
 ### Inferential  (Build model.1)
 
@@ -63,10 +67,10 @@ the formula needed is y = mx + b to create the line.
 #### Predict at target point
 
 ```{r}
-newdata = data.frame(ARM=88,GRIP=94)
-predict.lm(model.1,newdata, interval = "prediction")
+newdata = data.frame(GRIP = 94, ARM = 88)
+predict(model.1, newdata, interval = "prediction", level = .99)
 ```
-the model predicted a SIMS score of .706, where the 95% confidence interval -1.726 to 3.139 
+this is a prediction interval. how far does one point vary from the other if you take .7 away from 3.13, you'd end up approximately 2.3.
 
 #### scatterplot with model fit
   
@@ -85,23 +89,53 @@ plot(SIMS~GRIP,data=data)
 
 ### Numerical results 
 
+```{r}
+cor(SIMS~GRIP,data=data)
+```
 
 ### Inferential  (Build model.2)
-  
+
+```{r}
+model.2 <- lm(SIMS~GRIP,data=data)
+summary.lm(model.2)
+```  
 
 #### predict model.2 at target point
 
+```{r}
+newdata = data.frame(GRIP = 94, ARM = 88)
+predict(model.2, newdata, interval = "prediction", level = .99)
+```
+
+the model predicted a SIMS score of -0.536, where the 95% confidence interval -3.932 to 2.860
+
 #### now add the model fit to our plot for model.2
-  
+
+```{r}
+basicNN + geom_point() + geom_smooth(method=lm)
+``` 
+
+
+It looks like that the value of Y intercept would be around 1
 
 
 ## Model 3 SIM~ARM+GRIP
 
 ### Numerical results (cor)
 
-`
+```{r}
+cor(SIMS~ARM+GRIP,data=data)
+```
   
 ### Inferential  (Build 2-dimentional model.3)
+
+```{r}
+model.3 <- lm(SIMS~GRIP+ARM,data=data)
+summary.lm(model.3)
+```  
+
+GRIP * .02447 + ARM * .037 = SIMS 
+the bigger the adjusted R square the bigger the model, the multiple R squared is always a little bit bigger than the adjusted R square. the bigger the adjusted R square the bigger we reduce the errors.  
 
 #### predict model.3 at target point
   
@@ -110,6 +144,8 @@ plot(SIMS~GRIP,data=data)
 
 ### Model.1 vs Model.3
 ### Model.2 vs Model.3
+
+the model must be nested. that means that all the independent variables in one model are also in the other models SIMS is a function of ARM. model.2 is nested in model.3, model.1 is nested in model.3 
 
 ## Informally compare Model.1 with model.2
 
